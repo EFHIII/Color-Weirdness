@@ -292,6 +292,52 @@ function updateScales() {
   cspp.style.height = `${50 / ratio}px`;
   cspp2.style.width = `${600 / ratio}px`;
   cspp2.style.height = `${300 / ratio}px`;
+
+  cblend1.style.width = `${600 / ratio}px`;
+  cblend1.style.height = `${50 / ratio}px`;
+  cblend2.style.width = `${600 / ratio}px`;
+  cblend2.style.height = `${50 / ratio}px`;
+  cblend3.style.width = `${600 / ratio}px`;
+  cblend3.style.height = `${50 / ratio}px`;
+  cblend4.style.width = `${600 / ratio}px`;
+  cblend4.style.height = `${50 / ratio}px`;
+  cblend5.style.width = `${600 / ratio}px`;
+  cblend5.style.height = `${50 / ratio}px`;
+  cblend6.style.width = `${600 / ratio}px`;
+  cblend6.style.height = `${50 / ratio}px`;
+  cblend7.style.width = `${600 / ratio}px`;
+  cblend7.style.height = `${50 / ratio}px`;
+  cblend8.style.width = `${600 / ratio}px`;
+  cblend8.style.height = `${50 / ratio}px`;
+
+  caa1.style.width = `${100 / ratio}px`;
+  caa1.style.height = `${50 / ratio}px`;
+  caa12.style.width = `${600 / ratio}px`;
+  caa12.style.height = `${300 / ratio}px`;
+  caa2.style.width = `${100 / ratio}px`;
+  caa2.style.height = `${50 / ratio}px`;
+  caa22.style.width = `${600 / ratio}px`;
+  caa22.style.height = `${300 / ratio}px`;
+  caa3.style.width = `${100 / ratio}px`;
+  caa3.style.height = `${50 / ratio}px`;
+  caa32.style.width = `${600 / ratio}px`;
+  caa32.style.height = `${300 / ratio}px`;
+
+  cdither1.style.width = `${600 / ratio}px`;
+  cdither1.style.height = `${300 / ratio}px`;
+  cdither2.style.width = `${600 / ratio}px`;
+  cdither2.style.height = `${300 / ratio}px`;
+  cdither3.style.width = `${600 / ratio}px`;
+  cdither3.style.height = `${300 / ratio}px`;
+  cdither4.style.width = `${600 / ratio}px`;
+  cdither4.style.height = `${300 / ratio}px`;
+
+  cscale1.style.width = `${600 / ratio}px`;
+  cscale1.style.height = `${300 / ratio}px`;
+  cscale2.style.width = `${600 / ratio}px`;
+  cscale2.style.height = `${300 / ratio}px`;
+  cscale3.style.width = `${600 / ratio}px`;
+  cscale3.style.height = `${300 / ratio}px`;
 }
 updateScales();
 

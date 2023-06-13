@@ -14,8 +14,20 @@
   </head>
   <body id="bd">
     <h1>Color Weirdness</h1>
-    <p>This page serves as an explanation of the key things I know with respect to rendering color and anti-aliasing and where the HTML canvas (among other things) is different in those respects from what you might want.</p>
-    <h2>Chapter 0: What is color?</h2>
+    <p>
+      This page serves as an explanation of the key things I know with respect to rendering color and anti-aliasing and where the HTML canvas (among other things) is different in those respects from what you might want.
+    </p>
+    <ul>
+      <li><a href="#chapter-0">Chapter 0: What is color?</a></li>
+      <li><a href="#chapter-1">Chapter 1: How is color displayed?</a></li>
+      <li><a href="#chapter-2">Chapter 2: What is Anti-aliasing?</a></li>
+      <li><a href="#chapter-3">Chapter 3: How does color blending work?</a></li>
+      <li><a href="#chapter-4">Chapter 4: Canvas color blending & anti-aliasing</a></li>
+      <li><a href="#chapter-5">Chapter 5: Dithering</a></li>
+      <li><a href="#chapter-6">Chapter 6: How do you make Void-and-Cluster?</a></li>
+      <li><a href="#chapter-7">Chapter 7: Image scaling</a></li>
+    </ul>
+    <h2 id="chapter-0">Chapter 0: What is color?</h2>
     <p>As a foundation, I believe it is useful to know how color and light works.
       Color is the perception humans (and other animals) have to distinguish different frequencies of light.
       It's not a perfect perception though, rather it's heavily biased towards distinguishing particular frequencies of light while other frequencies are completely invisible (e.g. ultraviolet light).
@@ -32,7 +44,7 @@
       If you want to know more about that, see <a href="https://en.wikipedia.org/wiki/Cone_cell" target="_blank">Wikipedia</a>.
       Color perception is somewhat subjective, so there have been some attempts to model "typical perception", notably <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> and <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a>.
     </p>
-    <h2>Chapter 1: How is color displayed?</h2>
+    <h2 id="chapter-1">Chapter 1: How is color displayed?</h2>
     <p>
       Color on a (modern) display, is generally created via a square pixel which is divided into thirds, the left-most third being red, then green, and lastly blue.
       specifics beyond that is somewhat variable, There are <a href="https://geometrian.com/programming/reference/subpixelzoo/index.php" target="_blank">severeal other pixel layouts</a>, but for convenience, I'll assume RGB.
@@ -60,7 +72,7 @@
       as apposed to linear-sRGB which, as the name sugguests, is linear.
       This will be important later.
     </p>
-    <h2>Chapter 2: What is Anti-aliasing?</h2>
+    <h2 id="chapter-2">Chapter 2: What is Anti-aliasing?</h2>
     <p>
       Anti-aliasing is Where you use color blending at the edge of shapes to smooth out edges.
       It's extremely useful in making digitial graphics look good.
@@ -106,7 +118,7 @@
     </p>
     <canvas id="canvasspp" width="100" height="50"></canvas><br>
     <canvas id="canvasspp2" width="600" height="300"></canvas>
-    <h2>Chapter 3: How does color blending work?</h2>
+    <h2 id="chapter-3">Chapter 3: How does color blending work?</h2>
     <p>
       Color blending is a topic that probably doesn't get as much attention as it deserves.
       It's also done poorly a lot.
@@ -154,7 +166,7 @@
     </code>
       A linear color-space is one where the gamma is 1.
     </p>
-    <h2>Chapter 4: Canvas color blending & anti-aliasing</h2>
+    <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
       sRGB is a pretty bad color space to do color blending in.
       Unfortunately, it's often the most convenient, which I'm guessing is why CSS & the HTML Canvas both use sRGB for color blending.
@@ -175,7 +187,7 @@
     <h3 style="text-align: center">linear-sRGB anti-aliasing (sub-pixel-perfect)</h3>
     <canvas id="canvasaa3" width="100" height="50"></canvas><br>
     <canvas id="canvasaa32" width="600" height="300"></canvas>
-    <h2>Chapter 5: Dithering</h2>
+    <h2 id="chapter-5">Chapter 5: Dithering</h2>
     <p>
       Dithering isn't that important most of the time,
       but there are some key situations where it becomes very valuable.
@@ -210,24 +222,26 @@
       Each of these three have their own strengths and weaknesses.
     </p>
     <p>
-      Cluster-dot Halftone tries to clump pixels of the same color together,
+      <b>Cluster-dot Halftone</b> tries to clump pixels of the same color together,
       which can be a good thing in some situations; notably it's useful
       in printing because ink tends to glob together.
+      It's also useful if the image being rendered might be down-scaled
+      because the down scaling is less likely to ruin the dither.
       It is the most coarse of these three though.
     </p>
     <p>
-      Bayer is, arguably, the easiest to make, plus it's the most intuitive.
+      <b>Bayer</b> is, arguably, the easiest to make, plus it's the most intuitive.
       It also is, historically, the most common dithering method.
       It can sometimes be a good choice stylistically,
       but, the very rigid structure it has can sometimes cause
       undesirable artifacting.
     </p>
     <p>
-      Void-and-Cluster is based off of blue noise, so it looks the least
+      <b>Void-and-Cluster</b> is based off of blue noise, so it looks the least
       structured of these three, which can be good or bad,
       but generally it makes the smoothest gradients of these three.
     </p>
-    <h2>Chapter 6: How do you make Void-and-Cluster?</h2>
+    <h2 id="chapter-6">Chapter 6: How do you make Void-and-Cluster?</h2>
     <p>
       There don't seem to be very many resources on how to make
       a Void-and-Cluster dither matrix, so I'll just go ahead and
@@ -286,7 +300,7 @@
       The main downside of temporal dithering is that it may cause an undesirable
       flickering effect.
     </p>
-    <h2>Chapter 7: Image scaling</h2>
+    <h2 id="chapter-7">Chapter 7: Image scaling</h2>
     <p>
       The last thing I want to touch on is image scaling,
       in particular upscaling.
