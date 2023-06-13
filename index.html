@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Color Weirdness</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+
+    <meta property="og:title" content="Color Weirdness">
+    <meta property="og:description" content="A demo of where color is sometimes rendered weirdly">
+    <meta property="og:url" content="https://efhiii.github.io/color-weirdness">
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  </head>
+  <body id="bd">
+    <h1>Color Weirdness</h1>
+    <p>This page serves as an explanation of the key things I know with respect to rendering color and anti-aliasing and where the HTML canvas (among other things) is different in those respects from what you might want.</p>
+    <h2>Chapter 0: What is color?</h2>
+    <p>As a foundation, I believe it is useful to know how color and light works.
+      Color is the perception humans (and other animals) have to distinguish different frequencies of light.
+      It's not a perfect perception though, rather it's heavily biased towards distinguishing particular frequencies of light while other frequencies are completely invisible (e.g. ultraviolet light).
+      There are two main forms of light, which you might've learned in school: <a href="https://en.wikipedia.org/wiki/Emission_spectrum" target="_blank">emission</a> and <a href="https://en.wikipedia.org/wiki/Absorption_spectroscopy" target="_blank">absorption</a>.
+      These two forms of light are easily distinguished by their spectra; see below.
+    </p>
+    <canvas id="canvas1" width="600" height="190"></canvas>
+    <p>
+      Understanding the exact details of this isn't too important, just know that
+      emission light is important when talking about displays that emit light, like a monitor,
+      and absorption light is important when talking about displays that reflect light, like what comes out of a printer.
+      I'll only be discussing emission light here.
+      To detect light, humans have 4 types of detectors: rods, which specifically work in dim light and don't detect color, and 3 types of cones which do detect color.
+      If you want to know more about that, see <a href="https://en.wikipedia.org/wiki/Cone_cell" target="_blank">Wikipedia</a>.
+      Color perception is somewhat subjective, so there have been some attempts to model "typical perception", notably <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> and <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a>.
+    </p>
+    <h2>Chapter 1: How is color displayed?</h2>
+    <p>
+      Color on a (modern) display, is generally created via a square pixel which is divided into thirds, the left-most third being red, then green, and lastly blue.
+      specifics beyond that is somewhat variable, There are <a href="https://geometrian.com/programming/reference/subpixelzoo/index.php" target="_blank">severeal other pixel layouts</a>, but for convenience, I'll assume RGB.
+      That means that a given dispaly, in a sense, has 3x as many pixels as advertised which is worth taking advantage of if possible.
+    </p>
+    <p>
+      Bellow is an animation of two rectangles going left and right.
+      Both are rendered using 1-bit per channel color, but the bottom rectangle takes advantage of the sub-pixels (assuming RGB).
+      As a result, the bottom rectangle's animation should look 3x as smooth.
+    </p>
+    <canvas id="canvas2" width="100" height="13"></canvas>
+    <p>
+      If the above sub-pixel version looks worse, then you're probably either using a rotated monitor or a non RGB monitor.
+      The demos on this page will look much better if you remedy that. Here's what the above should look like at the pixel level:
+    </p>
+    <canvas id="canvas3" width="600" height="78"></canvas>
+    <p>
+      Of course, most pixels these days aren't just 1-bit per channel. If they're 100% sRGB, then they're 8-bits per channel, and if they're not 100% sRGB, they probably pretend to be.
+      Here's a demo with a color-picker.
+    </p>
+    <input type="color" id="col-input" value="#3296fa"><br>
+    <canvas id="canvas4" width="600" height="300"></canvas>
+    <p>
+      sRGB is weird though. It has a non-linearity of luminance to it,
+      as apposed to linear-sRGB which, as the name sugguests, is linear.
+      This will be important later.
+    </p>
+    <h2>Chapter 2: What is Anti-aliasing?</h2>
+    <p>
+      Anti-aliasing is Where you use color blending at the edge of shapes to smooth out edges.
+      It's extremely useful in making digitial graphics look good.
+      It's somewhat difficult to do well though, and is the main reason I'm writing this.
+      There are four main types of anti-aliasing:
+    </p>
+    <h3>Aliased</h3>
+    <p>
+      No anti-aliasing is simply refered to as aliased.
+      The result is generally lots of <a href="https://en.wikipedia.org/wiki/Jaggies" target="_blank">jaggies</a>.
+    </p>
+    <canvas id="canvasal" width="100" height="50"></canvas><br>
+    <canvas id="canvasal2" width="600" height="300"></canvas>
+    <h3>Supersampling</h3>
+    <p>
+      Standard supersampling treats each pixel as if the RGB are all in the same spot.
+      For anti-aliasing, each pixel takes on the color of the average of several samples from within the area the pixel represents.
+      This is often a square grid (e.g. 2x2, 3x3 etc.), though in Monte Carlo based rendering like <a href="https://en.wikipedia.org/wiki/Path_tracing" target="_blank">path tracing</a>, it isn't.
+    </p>
+    <canvas id="canvasss" width="100" height="50"></canvas><br>
+    <canvas id="canvasss2" width="600" height="300"></canvas>
+    <h3>Sub-pixel supersampling</h3>
+    <p>
+      Similar to standard supersampling, but taking into account subpixels.
+      There are two main reasons to prefer standard supersampling;
+      sub-pixel supersampling is more conputatinoally expensive for minimal improvement,
+      and if the sub-pixel layout is different from what was expected, sub-pixel supersampling is actually worse.
+    </p>
+    <canvas id="canvassss" width="100" height="50"></canvas><br>
+    <canvas id="canvassss2" width="600" height="300"></canvas>
+    <h3>pixel-perfect</h3>
+    <p>
+      Similar to standard supersampling, pixel-perfect rendering treats each pixel as if the RGB are all in the same spot.
+      Pixel-perfect rendering is what you get if you take the limit of supersampling as the number of samples approaches infinity.
+      It's not often practical to do pixel-perfect rendering, but for simple shapes like rectangles on a flat color, it's not too hard to derive.
+    </p>
+    <canvas id="canvaspp" width="100" height="50"></canvas><br>
+    <canvas id="canvaspp2" width="600" height="300"></canvas>
+    <h3>sub-pixel-perfect</h3>
+    <p>
+      The same as pixel-perfect rendering, but taking into account sub-pixels.
+      This is the absolute highest quality possible on a monitor, and has the same drawbacks as sub-pixel supersampling. Fonts are usually rendered at this quality.
+    </p>
+    <canvas id="canvasspp" width="100" height="50"></canvas><br>
+    <canvas id="canvasspp2" width="600" height="300"></canvas>
+    <h2>Chapter 3: How does color blending work?</h2>
+    <p>
+      Color blending is a topic that probably doesn't get as much attention as it deserves.
+      It's also done poorly a lot.
+      Generally speaking, color blending should be done in a linear color space.
+      Unfortunately, color blending is often done in sRGB, and to a lesser extent HSL & HSV; all of which are non-linear color spaces.
+    </p>
+    <p>
+      Here's a demo of linear interpolation in various color spaces:
+    </p>
+    <input type="color" id="blend-input1" value="#0000ff">
+    <input type="color" id="blend-input2" value="#7f7f00"><br>
+    <h3 style="text-align: center">sRGB</h3>
+    <canvas id="canvasblend1" width="600" height="50"></canvas>
+    <h3 style="text-align: center">linear-sRGB / CIE 1931 XYZ / CIE *L*a*b</h3>
+    <canvas id="canvasblend2" width="600" height="50"></canvas>
+    <h3 style="text-align: center">HSL / HSV</h3>
+    <canvas id="canvasblend3" width="600" height="50"></canvas>
+    <h3 style="text-align: center">linear-HSL / linear-HSV</h3>
+    <canvas id="canvasblend4" width="600" height="50"></canvas>
+    <h3 style="text-align: center">true HSL</h3>
+    <canvas id="canvasblend5" width="600" height="50"></canvas>
+    <h3 style="text-align: center">true linear-HSL</h3>
+    <canvas id="canvasblend6" width="600" height="50"></canvas>
+    <h3 style="text-align: center">true HSV</h3>
+    <canvas id="canvasblend7" width="600" height="50"></canvas>
+    <h3 style="text-align: center">true linear-HSV</h3>
+    <canvas id="canvasblend8" width="600" height="50"></canvas>
+    <p>
+      I should probably explain what a linear color space is.
+      Human perception is better at distinguishing small differences in dark colors
+      than small differences in bright colors.
+      This makes sense; it's far more useful to be able to tell the difference between
+      0.01 and 0.02 than it is to be able to tell the difference between 0.51 and 0.52 (0 is black and 1 is white).
+      To compensate for this, sRGB (among other color spaces) makes the differnce in brightness between dark colors smaller than the difference in brightness between bright colors.
+      How much it compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
+      Gamma often refers to an exponent applied to the luminance of the colors.
+      sRGB is generally referred to as having a gamma of about 2.2,
+      although sRGB gamma doesn't actually fit to an exponent curve.
+      The gamma correction formula for sRGB is:
+    <code>
+      <span class="purple">if</span> value <span class="purple"><=</span> <span class="orange">0.0031308</span>:<br>
+      &nbsp;&nbsp;<span class="orange">12.92</span><span class="purple"> * </span>value<br>
+      <span class="purple">else</span>:<br>
+      &nbsp;&nbsp;<span class="orange">1.055</span><span class="purple"> * </span>value<sup><span class="orange">1</span><span class="purple">/</span><span class="orange">2.4</span></sup> <span class="purple">-</span> <span class="orange">0.055</span>
+    </code>
+      A linear color-space is one where the gamma is 1.
+    </p>
+    <h2>Chapter 4: Canvas color blending & anti-aliasing</h2>
+    <p>
+      sRGB is a pretty bad color space to do color blending in.
+      Unfortunately, it's often the most convenient, which I'm guessing is why CSS & the HTML Canvas both use sRGB for color blending.
+      This has some immediate negative side effects, the most obvious one being how it does anti-aliasing.
+    </p>
+    <p>
+      The HTML Canvas' anti-aliasing looks especially bad when straight edges
+      are animated at fractional pixels per frame,
+      the main reason being that it color blends in sRGB.
+      The result is a kind of pulsating effect.
+    </p>
+    <h3 style="text-align: center">sRGB anti-aliasing (CSS & Canvas)</h3>
+    <canvas id="canvasaa1" width="100" height="50"></canvas><br>
+    <canvas id="canvasaa12" width="600" height="300"></canvas>
+    <h3 style="text-align: center">linear-sRGB anti-aliasing (pixel-perfect)</h3>
+    <canvas id="canvasaa2" width="100" height="50"></canvas><br>
+    <canvas id="canvasaa22" width="600" height="300"></canvas>
+    <h3 style="text-align: center">linear-sRGB anti-aliasing (sub-pixel-perfect)</h3>
+    <canvas id="canvasaa3" width="100" height="50"></canvas><br>
+    <canvas id="canvasaa32" width="600" height="300"></canvas>
+    <h2>Chapter 5: Dithering</h2>
+    <p>
+      Dithering isn't that important most of the time,
+      but there are some key situations where it becomes very valuable.
+      Specifically, dithering is useful for slow gradients.
+      Here's an example of the artifacting that happens (without dithering) on slow gradients:
+    </p>
+    <canvas id="canvasdither1" width="600" height="300"></canvas>
+    <p>
+      To emphasize the effect, the top half is 6-bits per channel,
+      but you should still be able to see it in the lower half which is standard 8-bits per channel.
+      If you hover over the image, the rest of the page will go black, which should make it easier to see.
+      If the bottom half still looks smooth to you, try turning your screen brightness up.
+    </p>
+    <p>
+      Dithering is a technique of selectively varying the color of pixels
+      so as to simulate a higher bit-depth than is actually available.
+      There are lots of various <a href="https://en.wikipedia.org/wiki/Dither#Algorithms" target="_blank">dithering algorithms</a>,
+      including for arbitrary palettes (for which I highly recommend reading <a href="https://bisqwit.iki.fi/story/howto/dither/jy/" target="_blank">this article</a>).
+      However, for performance reasons, and because the improvement from better algorithms using <a href="https://en.wikipedia.org/wiki/Error_diffusion" target="_blank">Error diffusion</a> is barely noticible,
+      it's generally prefferred to use an <a href="https://en.wikipedia.org/wiki/Ordered_dithering" target="_blank">ordered dithering</a> dithering algorithm for 8+ bits-per channel dithering.
+      That generally means one of:
+    </p>
+    <h3 style="text-align: center">Cluster-dot Halftone</h3>
+    <canvas id="canvasdither2" width="600" height="300"></canvas>
+    <h3 style="text-align: center">Bayer</h3>
+    <canvas id="canvasdither3" width="600" height="300"></canvas>
+    <h3 style="text-align: center">Void-and-Cluster</h3>
+    <canvas id="canvasdither4" width="600" height="300"></canvas>
+    <p>
+      You can also have an arbitrarily large dithering matrix,
+      but for the above I used an 8x8 matrix for Cluster-dot Halftone & Bayer and a 64x64 matrix for Void-and-Cluster.
+      Each of these three have their own strengths and weaknesses.
+    </p>
+    <p>
+      Cluster-dot Halftone tries to clump pixels of the same color together,
+      which can be a good thing in some situations; notably it's useful
+      in printing because ink tends to glob together.
+      It is the most coarse of these three though.
+    </p>
+    <p>
+      Bayer is, arguably, the easiest to make, plus it's the most intuitive.
+      It also is, historically, the most common dithering method.
+      It can sometimes be a good choice stylistically,
+      but, the very rigid structure it has can sometimes cause
+      undesirable artifacting.
+    </p>
+    <p>
+      Void-and-Cluster is based off of blue noise, so it looks the least
+      structured of these three, which can be good or bad,
+      but generally it makes the smoothest gradients of these three.
+    </p>
+    <h2>Chapter 6: How do you make Void-and-Cluster?</h2>
+    <p>
+      There don't seem to be very many resources on how to make
+      a Void-and-Cluster dither matrix, so I'll just go ahead and
+      provide that here.
+      I used <a href="https://github.com/Mukosame/ImageToolbox/blob/master/ReferenceMaterials/Void-and-Cluster/The%20void-and-cluster%20method%20for%20dither%20array%20generation%20-%20Ulichney.pdf" target="_blank">this paper</a> as a reference,
+      but I use a slightly different method for generating the initial bitmap, which I've found produces better results.
+    </p>
+    <p>
+      An ordered dithering dithering matrix is generally a square matrix
+      that includes every integer from 0 to N×N where N×N is the size of the matrix.
+      As an example, these are 2x2 and 4x4 Bayer dithering matricies:
+      <code>
+        0 2<br>
+        3 1
+      </code>
+      <code>
+   &nbsp;0 &nbsp;8 &nbsp;2 10<br>
+        12 &nbsp;4 14 &nbsp;6<br>
+   &nbsp;3  11 &nbsp;1 &nbsp;9<br>
+        15 &nbsp;7 13 &nbsp;5<br>
+      </code>
+    </p>
+    <p>
+      To use a dithering matrix, you
+      add<span class="code">(matrix[<span class="yellow">X</span> <span class="purple">mod</span> <span class="yellow">N</span>][<span class="yellow">Y</span> <span class="purple">mod</span> <span class="yellow">N</span>] <span class="purple">+</span> <span class="orange">0.5</span>) <span class="purple">/</span> <span class="yellow">N×N</span> <span class="purple">-</span> <span class="orange">0.5</span></span>,
+      where<span class="code yellow">X</span>is the x-coordinate
+      and<span class="code yellow">Y</span>is the y-coordinate,
+      to each channel of each pixel's color before justifying the color to a renderable color.
+    </p>
+    <ol>
+      To make a Void-and-Cluster dithering matrix, the process is roughly:
+      <li>Create a bitmap of points roughly evenly distributed</li>
+      <li>Find the biggest cluster</li>
+      <li>Remove the point at the center of the biggest cluster</li>
+      <li>Set dither matrix at the coordinate of where the point was removed as N where N is the number of points remaining</li>
+      <li>Repeat 2-4 until there are no points left</li>
+      <li>Revert back to the original bitmap</li>
+      <li>Find the biggest void</li>
+      <li>Add a point at the center of the biggest void</li>
+      <li>Set dither matrix at the coordinate of where the point was added as N where N is the number of points remaining</li>
+      <li>Repeat 7-9 until the grid is filled</li>
+    </ol>
+    <p>
+      For finding clusters and voids,
+      a gaussian blur with a diameter equal to the matrix size
+      and wrapping around both horizontally and vertically is generally used.
+      The brightest and darkest points after applying the blur are the clusters and voids.
+      You can cache the blurred version of the bitmap and just add/subtract
+      the difference for each point added/removed, which helps a lot with performance.
+      You can try various starting numbers of points in the initial bitmap and various matrix sizes.
+      <a href="void-and-cluster.js" target="_blank">Here</a> is some JavaScript code that generates a Void-and-Cluster dither matrix.
+    </p>
+    <p>
+      Before moving on, I just want to briefly mention that temporal dithering
+      is another potentially useful form of dithering.
+      The main downside of temporal dithering is that it may cause an undesirable
+      flickering effect.
+    </p>
+    <h2>Chapter 7: Image scaling</h2>
+    <p>
+      The last thing I want to touch on is image scaling,
+      in particular upscaling.
+      Image scaling is often done using bilinear interpolation,
+      which is fine, except the interpolation between pixel colors
+      is often done in sRGB, not linear-sRGB.
+    </p>
+    <h3 style="text-align: center">Nearest neighbor scaling</h3>
+    <canvas id="canvasscale1" width="600" height="300"></canvas>
+    <h3 style="text-align: center">normal (sRGB) bilinear scaling</h3>
+    <canvas id="canvasscale2" width="600" height="300"></canvas>
+    <h3 style="text-align: center">linear-sRGB bilinear scaling</h3>
+    <canvas id="canvasscale3" width="600" height="300"></canvas>
+    <p>
+      There are, of course, many other image scaling algorithms,
+      for example <a href="https://en.wikipedia.org/wiki/Bicubic_interpolation" target="_blank">Bicubic interpolation</a>,
+      but the main point I wanted to make is that using non-linear sRGB when doing color interpolation causes ugly artifacts.
+      As for downscaling, that goes back to the same things as anti-aliasing.
+    </p>
+    <br>
+    <a href="https://github.com/EFHIII/Color-Weirdness" target="_blank">View code on GitHub</a>
+    <br><br>
+    <script type="text/javascript" src="color.js"></script>
+    <script type="text/javascript" src="canvases.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>
