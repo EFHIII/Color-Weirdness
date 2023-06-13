@@ -47,11 +47,11 @@
     <h2 id="chapter-1">Chapter 1: How is color displayed?</h2>
     <p>
       Color on a (modern) display, is generally created via a square pixel which is divided into thirds, the left-most third being red, then green, and lastly blue.
-      specifics beyond that is somewhat variable, There are <a href="https://geometrian.com/programming/reference/subpixelzoo/index.php" target="_blank">severeal other pixel layouts</a>, but for convenience, I'll assume RGB.
-      That means that a given dispaly, in a sense, has 3x as many pixels as advertised which is worth taking advantage of if possible.
+      specifics beyond that is somewhat variable, There are <a href="https://geometrian.com/programming/reference/subpixelzoo/index.php" target="_blank">several other pixel layouts</a>, but for convenience, I'll assume RGB.
+      That means that a given display, in a sense, has 3x as many pixels as advertised which is worth taking advantage of if possible.
     </p>
     <p>
-      Bellow is an animation of two rectangles going left and right.
+      Below is an animation of two rectangles going left and right.
       Both are rendered using 1-bit per channel color, but the bottom rectangle takes advantage of the sub-pixels (assuming RGB).
       As a result, the bottom rectangle's animation should look 3x as smooth.
     </p>
@@ -69,19 +69,19 @@
     <canvas id="canvas4" width="600" height="300"></canvas>
     <p>
       sRGB is weird though. It has a non-linearity of luminance to it,
-      as apposed to linear-sRGB which, as the name sugguests, is linear.
+      as opposed to linear-sRGB which, as the name suggests, is linear.
       This will be important later.
     </p>
     <h2 id="chapter-2">Chapter 2: What is Anti-aliasing?</h2>
     <p>
       Anti-aliasing is Where you use color blending at the edge of shapes to smooth out edges.
-      It's extremely useful in making digitial graphics look good.
-      It's somewhat difficult to do well though, and is the main reason I'm writing this.
+      It's extremely useful in making digital graphics look good.
+      It's somewhat difficult to do well though and is the main reason I'm writing this.
       There are four main types of anti-aliasing:
     </p>
     <h3>Aliased</h3>
     <p>
-      No anti-aliasing is simply refered to as aliased.
+      No anti-aliasing is simply referred to as aliased.
       The result is generally lots of <a href="https://en.wikipedia.org/wiki/Jaggies" target="_blank">jaggies</a>.
     </p>
     <canvas id="canvasal" width="100" height="50"></canvas><br>
@@ -96,14 +96,14 @@
     <canvas id="canvasss2" width="600" height="300"></canvas>
     <h3>Sub-pixel supersampling</h3>
     <p>
-      Similar to standard supersampling, but taking into account subpixels.
+      Similar to standard supersampling but taking into account subpixels.
       There are two main reasons to prefer standard supersampling;
-      sub-pixel supersampling is more conputatinoally expensive for minimal improvement,
+      sub-pixel supersampling is more computationally expensive for minimal improvement,
       and if the sub-pixel layout is different from what was expected, sub-pixel supersampling is actually worse.
     </p>
     <canvas id="canvassss" width="100" height="50"></canvas><br>
     <canvas id="canvassss2" width="600" height="300"></canvas>
-    <h3>pixel-perfect</h3>
+    <h3>Pixel-perfect</h3>
     <p>
       Similar to standard supersampling, pixel-perfect rendering treats each pixel as if the RGB are all in the same spot.
       Pixel-perfect rendering is what you get if you take the limit of supersampling as the number of samples approaches infinity.
@@ -111,10 +111,10 @@
     </p>
     <canvas id="canvaspp" width="100" height="50"></canvas><br>
     <canvas id="canvaspp2" width="600" height="300"></canvas>
-    <h3>sub-pixel-perfect</h3>
+    <h3>Sub-pixel-perfect</h3>
     <p>
-      The same as pixel-perfect rendering, but taking into account sub-pixels.
-      This is the absolute highest quality possible on a monitor, and has the same drawbacks as sub-pixel supersampling. Fonts are usually rendered at this quality.
+      Sub-pixel-perfect rendering is the same as pixel-perfect rendering but taking into account sub-pixels.
+      This is the absolute highest quality possible on a monitor and has the same drawbacks as sub-pixel supersampling. Fonts are usually rendered at this quality.
     </p>
     <canvas id="canvasspp" width="100" height="50"></canvas><br>
     <canvas id="canvasspp2" width="600" height="300"></canvas>
@@ -152,7 +152,7 @@
       than small differences in bright colors.
       This makes sense; it's far more useful to be able to tell the difference between
       0.01 and 0.02 than it is to be able to tell the difference between 0.51 and 0.52 (0 is black and 1 is white).
-      To compensate for this, sRGB (among other color spaces) makes the differnce in brightness between dark colors smaller than the difference in brightness between bright colors.
+      To compensate for this, sRGB (among other color spaces) makes the difference in brightness between dark colors smaller than the difference in brightness between bright colors.
       How much it compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
       Gamma often refers to an exponent applied to the luminance of the colors.
       sRGB is generally referred to as having a gamma of about 2.2,
@@ -168,8 +168,8 @@
     </p>
     <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
-      sRGB is a pretty bad color space to do color blending in.
-      Unfortunately, it's often the most convenient, which I'm guessing is why CSS & the HTML Canvas both use sRGB for color blending.
+      sRGB is a poor color space to do color blending in.
+      Unfortunately, it's often the most convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
       This has some immediate negative side effects, the most obvious one being how it does anti-aliasing.
     </p>
     <p>
@@ -206,8 +206,8 @@
       so as to simulate a higher bit-depth than is actually available.
       There are lots of various <a href="https://en.wikipedia.org/wiki/Dither#Algorithms" target="_blank">dithering algorithms</a>,
       including for arbitrary palettes (for which I highly recommend reading <a href="https://bisqwit.iki.fi/story/howto/dither/jy/" target="_blank">this article</a>).
-      However, for performance reasons, and because the improvement from better algorithms using <a href="https://en.wikipedia.org/wiki/Error_diffusion" target="_blank">Error diffusion</a> is barely noticible,
-      it's generally prefferred to use an <a href="https://en.wikipedia.org/wiki/Ordered_dithering" target="_blank">ordered dithering</a> dithering algorithm for 8+ bits-per channel dithering.
+      However, for performance reasons, and because the improvement from better algorithms using <a href="https://en.wikipedia.org/wiki/Error_diffusion" target="_blank">Error diffusion</a> is barely noticeable,
+      it's generally preferred to use an <a href="https://en.wikipedia.org/wiki/Ordered_dithering" target="_blank">ordered dithering</a> dithering algorithm for 8+ bits-per channel dithering.
       That generally means one of:
     </p>
     <h3 style="text-align: center">Cluster-dot Halftone</h3>
@@ -233,11 +233,11 @@
       <b>Bayer</b> is, arguably, the easiest to make, plus it's the most intuitive.
       It also is, historically, the most common dithering method.
       It can sometimes be a good choice stylistically,
-      but, the very rigid structure it has can sometimes cause
+      but the very rigid structure it has can sometimes cause
       undesirable artifacting.
     </p>
     <p>
-      <b>Void-and-Cluster</b> is based off of blue noise, so it looks the least
+      <b>Void-and-Cluster</b> is based off blue noise, so it looks the least
       structured of these three, which can be good or bad,
       but generally it makes the smoothest gradients of these three.
     </p>
