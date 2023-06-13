@@ -122,6 +122,7 @@ canvas {
   -o-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  image-rendering: pixelated;
 }
 
 body:has(canvas:hover) {
