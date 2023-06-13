@@ -129,6 +129,6 @@ body:has(canvas:hover) {
 }
 
 
-body:has(canvas:hover) p a {
+body:has(canvas:hover) p a, body:has(canvas:hover) ul a {
   color: #000;
 }
