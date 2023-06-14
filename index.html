@@ -15,7 +15,7 @@
   <body id="bd">
     <h1>Color Weirdness</h1>
     <p>
-      This page serves as an explanation of the key things I know with respect to rendering color and anti-aliasing and where CSS, & the HTML canvas (among other things) is different in those respects from what you might want.
+      This page serves as an explanation of the key things I know with respect to rendering color and anti-aliasing and where CSS & the HTML canvas (among other things) is different in those respects from what you might want.
     </p>
     <ul>
       <li><a href="#chapter-0">Chapter 0: What is color?</a></li>
@@ -57,7 +57,7 @@
     </p>
     <canvas id="canvas2" width="100" height="13"></canvas>
     <p>
-      If you're using a non RGB or rotate monitor, the above sub-pixel version will actually looks worse.
+      If you're using a non RGB or rotated monitor, the above sub-pixel version may actually looks worse.
       The demos on this page will look much better if you remedy that. Here's what the above should look like at the pixel level:
     </p>
     <canvas id="canvas3" width="600" height="78"></canvas>
@@ -80,8 +80,8 @@
     </p>
     <h2 id="chapter-2">Chapter 2: What is Anti-aliasing?</h2>
     <p>
-      Anti-aliasing is Where you use color blending at the edge of shapes to smooth out edges.
-      It's extremely useful in making digital graphics look good.
+      Anti-aliasing is where you use color blending at the edge of shapes to smooth out edges.
+      It's extremely useful in making digital graphics look smooth.
       It's somewhat difficult to do well though and is the main reason I'm writing this.
       There are four main types of anti-aliasing:
     </p>
@@ -97,7 +97,7 @@
       Standard supersampling treats each pixel as if the RGB are all in the same spot.
       For anti-aliasing, each pixel takes on the color of the average of several samples from within the area the pixel represents.
       How the average of multiple colors is calculated depends on the color space used; see <a href="#chapter-3">Chapter 3</a>.
-      The samples used often form a square grid (e.g. 2x2, 3x3 etc.), though in Monte Carlo based rendering like <a href="https://en.wikipedia.org/wiki/Path_tracing" target="_blank">path tracing</a>, it isn't.
+      The samples used often form a square grid (e.g. 2x2, 3x3 etc.), though not in Monte Carlo based rendering like <a href="https://en.wikipedia.org/wiki/Path_tracing" target="_blank">path tracing</a>.
     </p>
     <canvas id="canvasss" width="100" height="50"></canvas><br>
     <canvas id="canvasss2" width="600" height="300"></canvas>
@@ -114,7 +114,7 @@
     <p>
       Similar to standard supersampling, pixel-perfect rendering treats each pixel as if the RGB are all in the same spot.
       Pixel-perfect rendering is what you get if you take the limit of supersampling as the number of samples approaches infinity.
-      It's not often practical to do pixel-perfect rendering, but for simple shapes like rectangles on a flat color, it's not too hard to derive.
+      It's not often practical to do pixel-perfect rendering, but for simple shapes like circles on a flat color, it's not too hard to derive.
     </p>
     <canvas id="canvaspp" width="100" height="50"></canvas><br>
     <canvas id="canvaspp2" width="600" height="300"></canvas>
