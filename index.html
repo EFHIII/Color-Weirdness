@@ -57,12 +57,18 @@
     </p>
     <canvas id="canvas2" width="100" height="13"></canvas>
     <p>
-      If the above sub-pixel version looks worse, then you're probably either using a rotated monitor or a non RGB monitor.
+      If you're using a non RGB or rotate monitor, the above sub-pixel version will actually looks worse.
       The demos on this page will look much better if you remedy that. Here's what the above should look like at the pixel level:
     </p>
     <canvas id="canvas3" width="600" height="78"></canvas>
     <p>
-      Of course, most pixels these days aren't just 1-bit per channel. If they're 100% sRGB, then they're 8-bits per channel, and if they're not 100% sRGB, they probably pretend to be.
+      You might've noticed that the bottom version doesn't quite look 3x as smooth as the top one.
+      That's because the green sub-pixel is brighter than the red sub-pixel, which is brighter than the blue sub-pixel,
+      so the frames where a green sub-pixel changes are much more significant than frames where a blue sub-pixel changes.
+      The reason the sub-pixels aren't all the same brightness has to do with the complexities of how human color perception works.
+    </p>
+    <p>
+      Most pixels these days aren't just 1-bit per channel. If they're 100% sRGB, then they're 8-bits per channel, and if they're not 100% sRGB, they probably pretend to be.
       Here's a demo with a color-picker:
     </p>
     <input type="color" id="col-input" value="#3296fa"><br><br>
