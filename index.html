@@ -133,7 +133,7 @@
     </p>
     <p>
       Here's a demo of linear interpolation from black to white in
-      sRGB (a non-linear colorspace) vs linear-RGB (a linear colorspace):
+      sRGB (a non-linear color space) vs linear-RGB (a linear color space):
     </p>
     <h3 style="text-align: center">non-linear (sRGB)</h3>
     <canvas id="canvasblend1a" width="600" height="50"></canvas>
@@ -155,8 +155,8 @@
     <p>
       To compensate for human perception, sRGB (among other color spaces) makes the difference
       in brightness between dark colors smaller than the difference in brightness between bright colors.
-      This makes it so that disprportionately more of the colorspace represents dark colors.
-      How much a colorspace compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
+      This makes it so that disprportionately more of the color space represents dark colors.
+      How much a color space compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
       Gamma often refers to an exponent applied to the luminance of the colors.
       sRGB is generally referred to as having a gamma of about 2.2,
       although sRGB gamma doesn't actually fit to an exponent curve.
@@ -189,15 +189,15 @@
     <h3 style="text-align: center">true linear-HSV</h3>
     <canvas id="canvasblend8" width="600" height="50"></canvas>
     <p>
-      of these colorspaces, linear-RGB / <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> / <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a> (which all use the same scale)
+      of these color spaces, linear-RGB / <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> / <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a> (which all use the same scale)
       are the most accurate in terms of actual color blending (as a typical human percieves it).
       For that reason, they're usually the best color spaces to do color blending in,
-      although interpolation in other colorspaces can be useful for artistic reasons.
+      although interpolation in other color spaces can be useful for artistic reasons.
     </p>
     <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
       Although linear-RGB is a more appropriate color space to do color blending in,
-      normal sRGB is often more convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
+      sRGB is often more convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
       This has some immediate negative side effects, the most obvious one being how it does anti-aliasing.
     </p>
     <p>
