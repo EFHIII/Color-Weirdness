@@ -120,10 +120,11 @@
     <canvas id="canvasspp2" width="600" height="300"></canvas>
     <h2 id="chapter-3">Chapter 3: How does color blending work?</h2>
     <p>
-      Anti-aliasing, among other things,requires color blending in order to smoothly interpolate
+      Color blending is used to smoothly interpolate
       from one color to another. In the case of anti-aliasing,
-      what the average of your samples looks like is different depending on the color space used,
-      so using the right one is important.
+      what the average of your samples looks like is different depending
+      on the color space used for color blending,
+      so using the right color space when doing color blending is important.
       Unfortunately, color blending in the right color space seems to get overlooked a lot.
       Generally speaking, color blending should be done in a linear color space.
       This is because non-linear color spaces are not mathematically consistant,
