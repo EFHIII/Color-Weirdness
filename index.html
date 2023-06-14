@@ -63,13 +63,13 @@
     <canvas id="canvas3" width="600" height="78"></canvas>
     <p>
       Of course, most pixels these days aren't just 1-bit per channel. If they're 100% sRGB, then they're 8-bits per channel, and if they're not 100% sRGB, they probably pretend to be.
-      Here's a demo with a color-picker.
+      Here's a demo with a color-picker:
     </p>
-    <input type="color" id="col-input" value="#3296fa"><br>
+    <input type="color" id="col-input" value="#3296fa"><br><br>
     <canvas id="canvas4" width="600" height="300"></canvas>
     <p>
       sRGB is weird though. It has a non-linearity of luminance to it,
-      as opposed to linear-sRGB which, as the name suggests, is linear.
+      as opposed to linear-RGB which, as the name suggests, is linear.
       This will be important later.
     </p>
     <h2 id="chapter-2">Chapter 2: What is Anti-aliasing?</h2>
@@ -133,18 +133,27 @@
     </p>
     <p>
       Here's a demo of linear interpolation from black to white in
-      sRGB (a non-linear colorspace) vs linear-sRGB (a linear colorspace)
+      sRGB (a non-linear colorspace) vs linear-RGB (a linear colorspace):
     </p>
     <h3 style="text-align: center">non-linear (sRGB)</h3>
     <canvas id="canvasblend1a" width="600" height="50"></canvas>
-    <h3 style="text-align: center">linear (linear-sRGB)</h3>
+    <h3 style="text-align: center">linear (linear-RGB)</h3>
     <canvas id="canvasblend2a" width="600" height="50"></canvas>
     <p>
-      Human perception is better at distinguishing small differences in dark colors
+      You might notice that the non-linear one looks more even.
+      That's because human perception is better at distinguishing small differences in dark colors
       than small differences in bright colors.
       This makes sense; it's far more useful to be able to tell the difference between
       0.01 and 0.02 than it is to be able to tell the difference between 0.51 and 0.52 (0 is black and 1 is white).
-      To compensate for this, sRGB (among other color spaces) makes the difference
+    </p>
+    <p>
+      Human perception also changes depending on enviormental brightness.
+      If you hover over the gradients, the rest of the screen will go black and,
+      if you're also in a dark room, your perception should adjust to the darkness & percieve
+      the dark colors as brighter even though the gradient doesn't change (unless you have an adaptive brightness monitor or <a href="https://support.microsoft.com/en-us/windows/content-adaptive-brightness-control-in-windows-292d1f7f-9e02-4b37-a9c8-dab3e1727e78" target="_blank">adaptive brightness</a> enabled).
+    </p>
+    <p>
+      To compensate for human perception, sRGB (among other color spaces) makes the difference
       in brightness between dark colors smaller than the difference in brightness between bright colors.
       This makes it so that disprportionately more of the colorspace represents dark colors.
       How much a colorspace compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
@@ -159,15 +168,13 @@
       &nbsp;&nbsp;<span class="orange">1.055</span><span class="purple"> * </span>value<sup><span class="orange">1</span><span class="purple">/</span><span class="orange">2.4</span></sup> <span class="purple">-</span> <span class="orange">0.055</span>
     </code>
       A linear color-space is one where the gamma is 1.
-    </p>
-    <p>
-      Here's a demo of linear interpolation in various color spaces:
+      Here's a demo of linear interpolation in various color spaces, both linear and non-linear:
     </p>
     <input type="color" id="blend-input1" value="#0000ff">
     <input type="color" id="blend-input2" value="#7f7f00"><br>
     <h3 style="text-align: center">sRGB</h3>
     <canvas id="canvasblend1" width="600" height="50"></canvas>
-    <h3 style="text-align: center">linear-sRGB / CIE 1931 XYZ / CIE *L*a*b</h3>
+    <h3 style="text-align: center">linear-RGB / CIE 1931 XYZ / CIE *L*a*b</h3>
     <canvas id="canvasblend2" width="600" height="50"></canvas>
     <h3 style="text-align: center">HSL / HSV</h3>
     <canvas id="canvasblend3" width="600" height="50"></canvas>
@@ -182,30 +189,30 @@
     <h3 style="text-align: center">true linear-HSV</h3>
     <canvas id="canvasblend8" width="600" height="50"></canvas>
     <p>
-      of these colorspaces, linear-sRGB / CIE 1931 / CIE *L*a*b (which all use the same scale)
+      of these colorspaces, linear-RGB / <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> / <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a> (which all use the same scale)
       are the most accurate in terms of actual color blending (as a typical human percieves it).
       For that reason, they're usually the best color spaces to do color blending in,
-      although linear interpolation in other colorspaces can be useful for artistic reasons.
+      although interpolation in other colorspaces can be useful for artistic reasons.
     </p>
     <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
-      Although linear-sRGB is a more appropriate color space to do color blending in,
+      Although linear-RGB is a more appropriate color space to do color blending in,
       normal sRGB is often more convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
       This has some immediate negative side effects, the most obvious one being how it does anti-aliasing.
     </p>
     <p>
       The HTML Canvas' anti-aliasing looks especially bad when straight edges
-      are animated at fractional pixels per frame,
-      the main reason being that it color blends in sRGB.
-      The result is a kind of pulsating effect.
+      are animated at fractional pixels per frame.
+      The result is a kind of pulsating effect,
+      which you don't get when using linear-RGB.
     </p>
     <h3 style="text-align: center">sRGB anti-aliasing (CSS & Canvas)</h3>
     <canvas id="canvasaa1" width="100" height="50"></canvas><br>
     <canvas id="canvasaa12" width="600" height="300"></canvas>
-    <h3 style="text-align: center">linear-sRGB anti-aliasing (pixel-perfect)</h3>
+    <h3 style="text-align: center">linear-RGB anti-aliasing (pixel-perfect)</h3>
     <canvas id="canvasaa2" width="100" height="50"></canvas><br>
     <canvas id="canvasaa22" width="600" height="300"></canvas>
-    <h3 style="text-align: center">linear-sRGB anti-aliasing (sub-pixel-perfect)</h3>
+    <h3 style="text-align: center">linear-RGB anti-aliasing (sub-pixel-perfect)</h3>
     <canvas id="canvasaa3" width="100" height="50"></canvas><br>
     <canvas id="canvasaa32" width="600" height="300"></canvas>
     <h2 id="chapter-5">Chapter 5: Dithering</h2>
@@ -327,13 +334,13 @@
       in particular upscaling.
       Image scaling is often done using <a href="https://en.wikipedia.org/wiki/Bilinear_interpolation" target="_blank">bilinear interpolation</a>,
       which is fine, except the interpolation between pixel colors
-      is often done in sRGB, not linear-sRGB.
+      is often done in sRGB, not linear-RGB.
     </p>
     <h3 style="text-align: center">Nearest neighbor scaling</h3>
     <canvas id="canvasscale1" width="600" height="300"></canvas>
     <h3 style="text-align: center">normal (sRGB) bilinear scaling</h3>
     <canvas id="canvasscale2" width="600" height="300"></canvas>
-    <h3 style="text-align: center">linear-sRGB bilinear scaling</h3>
+    <h3 style="text-align: center">linear-RGB bilinear scaling</h3>
     <canvas id="canvasscale3" width="600" height="300"></canvas>
     <p>
       There are, of course, many other image scaling algorithms,
