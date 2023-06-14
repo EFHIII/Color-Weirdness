@@ -96,7 +96,8 @@
     <p>
       Standard supersampling treats each pixel as if the RGB are all in the same spot.
       For anti-aliasing, each pixel takes on the color of the average of several samples from within the area the pixel represents.
-      This is often a square grid (e.g. 2x2, 3x3 etc.), though in Monte Carlo based rendering like <a href="https://en.wikipedia.org/wiki/Path_tracing" target="_blank">path tracing</a>, it isn't.
+      How the average of multiple colors is calculated depends on the color space used; see <a href="#chapter-3">Chapter 3</a>.
+      The samples used often form a square grid (e.g. 2x2, 3x3 etc.), though in Monte Carlo based rendering like <a href="https://en.wikipedia.org/wiki/Path_tracing" target="_blank">path tracing</a>, it isn't.
     </p>
     <canvas id="canvasss" width="100" height="50"></canvas><br>
     <canvas id="canvasss2" width="600" height="300"></canvas>
