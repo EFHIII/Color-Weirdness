@@ -88,6 +88,18 @@ const ctxspp2 = cspp2.getContext('2d', {
 });
 
 
+const cblend1a = document.getElementById('canvasblend1a');
+const ctxblend1a = cblend1a.getContext('2d', {
+  //willReadFrequently: true,
+  colorSpace: 'srgb'
+});
+
+const cblend2a = document.getElementById('canvasblend2a');
+const ctxblend2a = cblend2a.getContext('2d', {
+  //willReadFrequently: true,
+  colorSpace: 'srgb'
+});
+
 const cblend1 = document.getElementById('canvasblend1');
 const ctxblend1 = cblend1.getContext('2d', {
   //willReadFrequently: true,
@@ -292,6 +304,11 @@ function updateScales() {
   cspp.style.height = `${50 / ratio}px`;
   cspp2.style.width = `${600 / ratio}px`;
   cspp2.style.height = `${300 / ratio}px`;
+
+  cblend1a.style.width = `${600 / ratio}px`;
+  cblend1a.style.height = `${50 / ratio}px`;
+  cblend2a.style.width = `${600 / ratio}px`;
+  cblend2a.style.height = `${50 / ratio}px`;
 
   cblend1.style.width = `${600 / ratio}px`;
   cblend1.style.height = `${50 / ratio}px`;

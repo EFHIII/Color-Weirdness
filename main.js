@@ -494,6 +494,18 @@ function drawBlend() {
     let t = x / 600;
     let it = 1 - t;
 
+    ctxblend1a.fillStyle = colorRGB({
+      r: t,
+      g: t,
+      b: t});
+    ctxblend1a.fillRect(x, 0, 1, 50);
+
+    ctxblend2a.fillStyle = colorlRGB({
+      r: t,
+      g: t,
+      b: t});
+    ctxblend2a.fillRect(x, 0, 1, 50);
+
     ctxblend1.fillStyle = colorRGB({
       r: col1.r * it + col2.r * t,
       g: col1.g * it + col2.g * t,

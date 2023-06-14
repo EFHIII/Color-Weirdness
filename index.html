@@ -120,10 +120,44 @@
     <canvas id="canvasspp2" width="600" height="300"></canvas>
     <h2 id="chapter-3">Chapter 3: How does color blending work?</h2>
     <p>
-      Color blending is a topic that probably doesn't get as much attention as it deserves.
-      It's also done poorly a lot.
+      Anti-aliasing, among other things,requires color blending in order to smoothly interpolate
+      from one color to another. In the case of anti-aliasing,
+      what the average of your samples looks like is different depending on the color space used,
+      so using the right one is important.
+      Unfortunately, color blending in the right color space seems to get overlooked a lot.
       Generally speaking, color blending should be done in a linear color space.
-      Unfortunately, color blending is often done in sRGB, and to a lesser extent HSL & HSV; all of which are non-linear color spaces.
+      This is because non-linear color spaces are not mathematically consistant,
+      so doing math, like linear interpolation, in them results in (essentially) incorrect results.
+      Unfortunately, color blending is often done in sRGB, which is not a linear color space.
+    </p>
+    <p>
+      Here's a demo of linear interpolation from black to white in
+      sRGB (a non-linear colorspace) vs linear-sRGB (a linear colorspace)
+    </p>
+    <h3 style="text-align: center">non-linear (sRGB)</h3>
+    <canvas id="canvasblend1a" width="600" height="50"></canvas>
+    <h3 style="text-align: center">linear (linear-sRGB)</h3>
+    <canvas id="canvasblend2a" width="600" height="50"></canvas>
+    <p>
+      Human perception is better at distinguishing small differences in dark colors
+      than small differences in bright colors.
+      This makes sense; it's far more useful to be able to tell the difference between
+      0.01 and 0.02 than it is to be able to tell the difference between 0.51 and 0.52 (0 is black and 1 is white).
+      To compensate for this, sRGB (among other color spaces) makes the difference
+      in brightness between dark colors smaller than the difference in brightness between bright colors.
+      This makes it so that disprportionately more of the colorspace represents dark colors.
+      How much a colorspace compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
+      Gamma often refers to an exponent applied to the luminance of the colors.
+      sRGB is generally referred to as having a gamma of about 2.2,
+      although sRGB gamma doesn't actually fit to an exponent curve.
+      The gamma correction formula for sRGB is:
+    <code>
+      <span class="purple">if</span> value <span class="purple"><=</span> <span class="orange">0.0031308</span>:<br>
+      &nbsp;&nbsp;<span class="orange">12.92</span><span class="purple"> * </span>value<br>
+      <span class="purple">else</span>:<br>
+      &nbsp;&nbsp;<span class="orange">1.055</span><span class="purple"> * </span>value<sup><span class="orange">1</span><span class="purple">/</span><span class="orange">2.4</span></sup> <span class="purple">-</span> <span class="orange">0.055</span>
+    </code>
+      A linear color-space is one where the gamma is 1.
     </p>
     <p>
       Here's a demo of linear interpolation in various color spaces:
@@ -147,29 +181,15 @@
     <h3 style="text-align: center">true linear-HSV</h3>
     <canvas id="canvasblend8" width="600" height="50"></canvas>
     <p>
-      I should probably explain what a linear color space is.
-      Human perception is better at distinguishing small differences in dark colors
-      than small differences in bright colors.
-      This makes sense; it's far more useful to be able to tell the difference between
-      0.01 and 0.02 than it is to be able to tell the difference between 0.51 and 0.52 (0 is black and 1 is white).
-      To compensate for this, sRGB (among other color spaces) makes the difference in brightness between dark colors smaller than the difference in brightness between bright colors.
-      How much it compensates for this is referred to as gamma and the process of correcting for this is called <a href="https://en.wikipedia.org/wiki/Gamma_correction" target="_blank">gamma correction</a>.
-      Gamma often refers to an exponent applied to the luminance of the colors.
-      sRGB is generally referred to as having a gamma of about 2.2,
-      although sRGB gamma doesn't actually fit to an exponent curve.
-      The gamma correction formula for sRGB is:
-    <code>
-      <span class="purple">if</span> value <span class="purple"><=</span> <span class="orange">0.0031308</span>:<br>
-      &nbsp;&nbsp;<span class="orange">12.92</span><span class="purple"> * </span>value<br>
-      <span class="purple">else</span>:<br>
-      &nbsp;&nbsp;<span class="orange">1.055</span><span class="purple"> * </span>value<sup><span class="orange">1</span><span class="purple">/</span><span class="orange">2.4</span></sup> <span class="purple">-</span> <span class="orange">0.055</span>
-    </code>
-      A linear color-space is one where the gamma is 1.
+      of these colorspaces, linear-sRGB / CIE 1931 / CIE *L*a*b (which all use the same scale)
+      are the most accurate in terms of actual color blending (as a typical human percieves it).
+      For that reason, they're usually the best color spaces to do color blending in,
+      although linear interpolation in other colorspaces can be useful for artistic reasons.
     </p>
     <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
-      sRGB is a poor color space to do color blending in.
-      Unfortunately, it's often the most convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
+      Although linear-sRGB is a more appropriate color space to do color blending in,
+      normal sRGB is often more convenient, which I'm guessing is why CSS & the HTML Canvas use sRGB for color blending.
       This has some immediate negative side effects, the most obvious one being how it does anti-aliasing.
     </p>
     <p>
