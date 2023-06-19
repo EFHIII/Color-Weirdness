@@ -42,7 +42,7 @@
       I'll only be discussing emission light here.
       To detect light, humans have 4 types of detectors: rods, which specifically work in dim light and don't detect color, and 3 types of cones which do detect color.
       If you want to know more about that, see <a href="https://en.wikipedia.org/wiki/Cone_cell" target="_blank">Wikipedia</a>.
-      Color perception is somewhat subjective, so there have been some attempts to model "typical perception", notably <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> and <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a>.
+      Color perception is somewhat subjective, so there have been some attempts to model "typical perception", notably <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a>, <a href="https://en.wikipedia.org/wiki/CIELUV" target="_blank">CIELUV</a>, and <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIELAB</a>.
     </p>
     <h2 id="chapter-1">Chapter 1: How is color displayed?</h2>
     <p>
@@ -181,7 +181,7 @@
     <input type="color" id="blend-input2" value="#7f7f00"><br>
     <h3 style="text-align: center">sRGB</h3>
     <canvas id="canvasblend1" width="600" height="50"></canvas>
-    <h3 style="text-align: center">linear-RGB / CIE 1931 XYZ / CIE *L*a*b</h3>
+    <h3 style="text-align: center">linear-RGB aka CIE 1931 RGB</h3>
     <canvas id="canvasblend2" width="600" height="50"></canvas>
     <h3 style="text-align: center">HSL / HSV</h3>
     <canvas id="canvasblend3" width="600" height="50"></canvas>
@@ -196,10 +196,10 @@
     <h3 style="text-align: center">true linear-HSV</h3>
     <canvas id="canvasblend8" width="600" height="50"></canvas>
     <p>
-      of these color spaces, linear-RGB / <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931</a> / <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank">CIE *L*a*b</a> (which all use the same scale)
-      are the most accurate in terms of actual color blending (as a typical human percieves it).
-      For that reason, they're usually the best color spaces to do color blending in,
-      although interpolation in other color spaces can be useful for artistic reasons.
+      of these color spaces, linear-RGB (aka <a href="https://en.wikipedia.org/wiki/CIE_1931_color_space" target="_blank">CIE 1931 RGB</a>)
+      is the most accurate in terms of actual color blending.
+      For that reason, they're usually the best color spaces to do pixel-level color blending in.
+      Interpolation in other color spaces can be useful for artistic reasons.
     </p>
     <h2 id="chapter-4">Chapter 4: Canvas color blending & anti-aliasing</h2>
     <p>
